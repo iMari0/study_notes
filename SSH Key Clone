@@ -1,0 +1,2 @@
+#Command line to synch SSH key 
+git clone "paste ssh key"
