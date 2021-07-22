@@ -1,0 +1,1 @@
+grant select on analytics.v_ab_test_template to t_tableau
