@@ -1,0 +1,4 @@
+Bootstrap aims to estimate the sampling distribution of a statistic.
+
+It informs on how lots of sample would behave when drawn from
+the same population where the original sample was taken from.
