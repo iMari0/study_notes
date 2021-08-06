@@ -1,0 +1,16 @@
+1: Create a df columns extracting the year of a date
+    date_to_year:
+        df['year'] = pd.DatetimeIndex(df['date']).year
+
+2:Convert string to date
+    from_obj_to_date:
+        conv_day = datetime.strptime(day, '%Y-%m-%d')
+
+
+3: Convert df column into date
+    from_obj_to_date:
+        pd.to_datetime(df['date'], format = '%Y-%m-%d')
+
+4: Create a dataframe column 'date' by iteration with timedelta
+    from_obj_to_date:
+        date.today()+timedelta(days = n)
