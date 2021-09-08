@@ -3,7 +3,6 @@ import random
 import pandas as pd
 import scipy.stats
 from matplotlib import pyplot as plt
-from scipy import stats
 
 clicks_a = [random.randint(0, 1) for x in range(100)]
 sessions_a = len(clicks_a)
@@ -32,7 +31,9 @@ _ = plt.ylabel("Conversion %")
 plt.bar(df['Group'], df['Conversions'], color = ['b','g'])
 plt.show()
 
-print("The expected value will be the product of the observed clicks by probability of click \n")
+print("The expected value shows how we should expect the data to turn out under the assumption of the null hypothesis"
+      "\n (Practical Statistics for Data Science p.124")
+print("The expected value will be the product of the all sessions in each group (A,B) by probability of click \n")
 print("probability of click = sum(clicks)/sessions_a+sessions")
 print("For Example, the expected value of A will be: \n ", e_a)
 print("The observed values are the clicks in each group", df['Clicks'])
