@@ -58,3 +58,5 @@ e_nconv_b = round(sessions_b * ((non_conv_a+non_conv_b)/
 e_table = pd.DataFrame({'Groups':['A','B'],
                         'Expected Clicks': [e_conv_a, e_conv_b],
                         'Expected Non Clicks':[e_nconv_a, e_nconv_b]})
+
+#Link at http://www.stat.yale.edu/Courses/1997-98/101/chisq.htm
