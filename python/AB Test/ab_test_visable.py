@@ -37,7 +37,6 @@ sessions = conv_a + non_conv_a + conv_b + non_conv_b
 # Sports  | 19 	22    28     69		Sports  | 18.9 	22.2  27.8
 # ---------------------------------
 e_a = round(sessions_a * (conv/sessions),1)
-
 e_b = round(sessions_b * (conv/sessions),1)
 
 ab_test = np.array([[conv_a,non_conv_a],[conv_b,non_conv_b]])
@@ -52,13 +51,10 @@ e_conv_a = round(sessions_a * ((conv_a+conv_b)/
                          ((conv_a + non_conv_a)+ (conv_b+non_conv_b))),2)
 e_conv_b = round(sessions_b * ((conv_a+conv_b)/
                          ((conv_a + non_conv_a)+ (conv_b+non_conv_b))),2)
-
 e_nconv_a = round(sessions_a * ((non_conv_a+non_conv_b)/
                          ((conv_a + non_conv_a)+ (conv_b+non_conv_b))),2)
-
 e_nconv_b = round(sessions_b * ((non_conv_a+non_conv_b)/
                          ((conv_a + non_conv_a)+ (conv_b+non_conv_b))),2)
-
 e_table = pd.DataFrame({'Groups':['A','B'],
                         'Expected Clicks': [e_conv_a, e_conv_b],
                         'Expected Non Clicks':[e_nconv_a, e_nconv_b]})
