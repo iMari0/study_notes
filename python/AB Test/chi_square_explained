@@ -1,0 +1,48 @@
+CHI SQUARE FOR AB TEST
+
+Example:
+         Group A | Group B
+Clicked      25     20
+Non Clicked  75     100
+Totals       100    120
+
+We have to test groups and we collect evidence:
+    - clicks
+    - non clicks
+    - all sessions
+
+Null Hypothesis --> There is no significant difference between the 2 groups (A = B)
+Alternative Hypothesis --> There is significant difference between the 2 groups (A != B)
+
+Assuming that the null hypothesis (H0) is true, what would be the expected values given the totals.
+This means that we are assuming that the results of the two groups are coming from the same distribution.
+Hence, we can sum all clicks, non clicked and sessions.
+
+         Group A | Group B | H0
+Clicked      25     20       45
+Non Clicked  75     100      175
+Totals       100    120      220
+
+If H0 is true, then we won't see any difference between group A and H0 and between group B and H0.
+
+
+What can we expect to see if each of these behaviours were drawn from the same sample?
+    - expected clicks a = (45/220) * 100
+    - expected clicks b = (45/220) * 120
+    - expected non_clicks a = (175/220) * 100
+    - expected non_clicks a = (175/220) * 100
+
+Xsquared = sum(observed - expected)**2/ expected
+(20 - 24.5)**2/24.5 + (25 - 20.5)**2/20.5 + (100-95.5)**2/95.5 + (75 - 79.5)**2/79.5 = 0.11
+
+Interpretation:
+There is 11% chance that the observed values of the 2 groups are coming from the same distribution.
+The odds of seeing the observed behaviour and the null hypothesis being true is slightly more than 10%
+This rate is too high.
+This means that we are 81% confident that there is a significant difference between the 2 groups. We set a confindence level of 95%. Hence we fail to reject H0.
+
+Looking at the table at 0.05 and DF 1 --> 3.84
+
+In this case we don't have enough data to make a final call out. Considering that we have a trend we can collect more data to see a difference.
+
+
