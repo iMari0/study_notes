@@ -1,0 +1,26 @@
+CHI SQUARE FOR AB TEST STEPS
+
+1. Conversions A and B
+2. Non Conversions A and B
+3. Contingency Table
+
+Group | Conversions | Non Conversions | Sessions |
+A        100            130              230
+B        150            195              345
+Total    250            325              575
+
+
+4. Expected values table
+    - expected conversion for A --> sessions_a * ((conv_a + conv_b)/(all_sessions))
+    - expected conversion for B --> sessions_b * ((conv_a + conv_b)/(all_sessions))
+    - expected non_conversion for A --> sessions_a * ((non_conv_a + non_conv_b)/(all_sessions))
+    - expected non_conversion for B --> sessions_b * ((non_conv_a + non_conv_b)/(all_sessions))
+
+5. Apply Chi Square formulae:
+    (observed - expected)**2 / expected
+
+6. Based on the confidence level and degree of freedom (e.g. 0.05 and 1)
+   we lookup the value in the chi square table https://people.smp.uq.edu.au/YoniNazarathy/stat_models_B_course_spring_07/distributions/chisqtab.pdf.
+   If the corresponding chi square value is > then our output then it means that if falls in the region where CL is higher --> Reject Null Hypothesis
+
+
