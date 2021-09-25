@@ -40,3 +40,4 @@ outliers = df[df.price > upper_whisker]
 outliers.id.count()
 outliers.id.count() / len(df)
 # 7% of the listings fall into the outliers' region
+
