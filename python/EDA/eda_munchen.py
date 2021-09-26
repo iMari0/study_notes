@@ -1,20 +1,22 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import xlim
 import seaborn as sns
 
+# Reading data
 path = '/Users/iuliano/Documents/projects/listings.csv'
-
 df = pd.read_csv(path)
 
 # Check the df shape
 print(df.shape)
 print(df.info)
 
+# Will store the original share to have a percentage of data that we'll lose after dropping nan and outliers
+original_shape = df.shape
+
 # First observation goes to the 'price' dtype --> obj. Investigating why and convert it into float
 print(df['price'].sample(10))
-# Dtype is obj, some values carry the dollar sign which will need to be dropped and converted to int
+# Dtype is obj, some values carry the dollar sign which will need to be dropped and converted to float
 df['price'] = df['price'].str.replace('$', '')
 df['price'] = df['price'].str.replace(',', '')
 df['price'] = df['price'].astype(float)
@@ -32,7 +34,7 @@ df = df2
 # In this section I will only focus on the listing status excluding traffic data
 print(df2.columns)
 df = df[['listing_url', 'neighbourhood_cleansed', 'latitude', 'longitude',
-         'longitude', 'room_type', 'accommodates', 'bathrooms_text', 'bedrooms',
+         'longitude', 'room_type', 'accommodates', 'bedrooms',
          'beds', 'price']]
 
 # I will investigate the price distribution to have a general idea of listings prices in the city
@@ -42,27 +44,70 @@ print(df['price'].describe())
 zero_price = df['price'][df['price'] == 0].value_counts()
 # Only 3 listings: will drop those observations
 df = df.drop(df[df.price == 0].index)
-
-# One listing has 11999$ price which seems too high for an air bnb. I'm assuming that this might be data quality issue.
-# As only 1 listing has this price, I will drop the row
-df = df.drop(df[df.price == 11999].index)
 print(df['price'].describe())
+plt.boxplot(df['price'])
 
-
-# Plot price distribution
-_ = plt.boxplot(df['price'])
-_ = plt.title('Price Distribution')
-plt.show()
-
+# By plotting the price distribution, we can see the presence of outliers
+# I want to be sure that the prices are not the result of poor data quality.
+# First I will assign the list of outliers to a variable.
+# Outliers will be all listings with a price > upper_whisker
 # Percentiles and outliers boundary
-lower_25 = np.percentile(df['price'], 25)
-median = np.percentile(df['price'], 50)
-upper_75 = np.percentile(df['price'], 75)
-iqr = upper_75 - lower_25
-upper_whisker = upper_75 + (1.5 * iqr)
+q_1, q_2, q_3 = df['price'].quantile([0.25, 0.5, 0.75])
+iqr = q_3 - q_1
+upper_whisker = q_3 + (1.5 * iqr)
 
 # Identify outliers
 outliers = df[df.price > upper_whisker]
-outliers.id.count()
-outliers.id.count() / len(df)
+outliers.listing_url.count()
+outliers.listing_url.count() / len(df)
 # 7% of the listings fall into the outliers' region
+
+# I want to look at the distribution of the outliers to understand how prices vary
+outliers.describe()
+o_q_1, o_q_2, o_q_3 = outliers['price'].quantile([0.25, 0.5, 0.75])
+o_iqr = o_q_3 - o_q_1
+o_upper_whisker = o_q_3 + (1.5 * o_iqr)
+outliers[['beds', 'bedrooms', 'neighbourhood_cleansed', 'price']].sort_values(by='price')
+print(o_upper_whisker)
+
+# The upper whisker of the outliers' list is 705.
+# For simplicity, I will check the percentage of listings with prices above this threshold.
+# I will eventually remove the observations if the impact is not too big
+round(df['price'][df.price > o_upper_whisker].count() / len(df), 2)
+# 0.01% of listings fall into this region. I will drop these observations to remove noise from the data.
+df = df.drop(df[df.price > o_upper_whisker].index)
+
+print(df['price'].describe())
+_ = sns.distplot(df['price'], color='b')
+_ = plt.title("Price Distribution")
+_ = plt.xlabel("Price")
+_ = plt.ylabel("Percentage of Listings in Bin")
+plt.show()
+
+
+# Plotting ECDF
+def ecdf(df, column):
+    data = df[column]
+    x = np.sort(data)
+    y = np.arange(1, len(df) + 1) / len(df)
+    plt.plot(x, y, linestyle='none', marker='.')
+    plt.title("ECDF PRICES")
+    plt.xlabel(column.upper())
+    plt.ylabel("Probability")
+    plt.show()
+
+
+ecdf(df, 'price')
+# There are still some nan in bedrooms and beds.
+# In this section I'm not going to focus on the best approach to handle them
+# I simply impute the median
+# Another option could be to scrape 'description' and look up for strings containing that info
+df['bedrooms'] = df['bedrooms'].fillna(df.bedrooms.median())
+df['beds'] = df['beds'].fillna(df.bedrooms.median())
+
+# How much data we lost? --> 0.1%
+data_loss = 1 - round(df.shape[0] / original_shape[0], 2)
+
+# Now let's explore correlations among int types
+num = df.select_dtypes(include=['int64', 'float64'])
+num.hist()
