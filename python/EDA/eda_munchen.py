@@ -50,7 +50,8 @@ plt.boxplot(df['price'])
 # By plotting the price distribution, we can see the presence of outliers
 # I want to be sure that the prices are not the result of poor data quality.
 # First I will assign the list of outliers to a variable.
-# Outliers will be all listings with a price > upper_whisker
+# Outliers will contain all listings with a price > upper_whisker
+
 # Percentiles and outliers boundary
 q_1, q_2, q_3 = df['price'].quantile([0.25, 0.5, 0.75])
 iqr = q_3 - q_1
@@ -91,13 +92,23 @@ def ecdf(df, column):
     x = np.sort(data)
     y = np.arange(1, len(df) + 1) / len(df)
     plt.plot(x, y, linestyle='none', marker='.')
-    plt.title("ECDF PRICES")
+    plt.title(f"ECDF {column.upper()} ")
     plt.xlabel(column.upper())
     plt.ylabel("Probability")
     plt.show()
 
 
+# Analysing distribution w/ and w/o outliers
 ecdf(df, 'price')
+ecdf(df[df.price < upper_whisker], 'price')
+
+fig, ax = plt.subplots(2)
+ax[0].boxplot(df['price'], vert=False)
+ax[0].set_title('Price Distribution w/ Outliers')
+ax[1].boxplot(df['price'][df.price < upper_whisker], vert=False)
+ax[1].set_title('Price Distribution w/o Outliers')
+
+
 # There are still some nan in bedrooms and beds.
 # In this section I'm not going to focus on the best approach to handle them
 # I simply impute the median
