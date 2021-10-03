@@ -93,6 +93,7 @@ def ecdf(df, column):
     y = np.arange(1, len(df) + 1) / len(df)
     plt.plot(x, y, linestyle='none', marker='.')
     plt.title(f"ECDF {column.upper()} ")
+    plt.legend()
     plt.xlabel(column.upper())
     plt.ylabel("Probability")
     plt.show()
@@ -101,6 +102,8 @@ def ecdf(df, column):
 # Analysing distribution w/ and w/o outliers
 ecdf(df, 'price')
 ecdf(df[df.price < upper_whisker], 'price')
+plt.legend()
+
 
 fig, ax = plt.subplots(2)
 ax[0].boxplot(df['price'], vert=False)
